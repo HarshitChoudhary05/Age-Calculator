@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age Calculator</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 90%;
+      width: 320px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    input[type="submit"] {
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .footer a {
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Age Calculator</h2>
+    <form id="ageForm">
+      <input type="text" id="dob" placeholder="Enter your date of birth (dd/mm/yyyy)" inputmode="numeric">
+      <input type="submit" value="Calculate">
+    </form>
+    <div id="result"></div>
+    <div class="footer">
+      ~ Created by <a href="https://example.com" target="_blank">Developer</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('dob').addEventListener('input', function(event) {
+      var input = event.target.value;
+      var formattedInput = input.replace(/\D/g, '').slice(0, 8).replace(/(\d{2})(\d{2})?(\d{4})?/, '$1/$2$3').replace(/(\d{2})\/(\d{2})/, '$1/$2/');
+      event.target.value = formattedInput;
+    });
+
+    document.getElementById('ageForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      var dobInput = document.getElementById('dob').value;
+      var age = calculateAge(dobInput);
+      document.getElementById('result').innerHTML = "Your age is: " + age;
+    });
+
+    function calculateAge(dob) {
+      var today = new Date();
+      var dobDate = new Date(dob.split('/').reverse().join('/'));
+      
+      var ageYears = today.getFullYear() - dobDate.getFullYear();
+      var ageMonths = today.getMonth() - dobDate.getMonth();
+      var ageDays = today.getDate() - dobDate.getDate();
+
+      if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+        ageYears--;
+        ageMonths += 12;
+      }
+
+      if (ageDays < 0) {
+        var prevMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        ageDays = Math.floor((today - prevMonth) / (1000 * 60 * 60 * 24)) + ageDays;
+      }
+
+      var ageString = ageYears + " years, " + ageMonths + " months, and " + ageDays + " days";
+      return ageString;
+    }
+  </script>
+</body>
+</html>
